@@ -20,6 +20,7 @@ export class ShopComponent implements OnInit{
     {name: 'Price: Low to high', value: 'PriceAsc'},
     {name: 'Price: High to low', value: 'PriceDesc'},
   ];
+  totalCount: number = 0;
   constructor(private shopService: ShopService) {
   }
   ngOnInit(): void {
@@ -30,7 +31,13 @@ export class ShopComponent implements OnInit{
 
   getProducts(){
     this.shopService.getProducts(this.shopParams).subscribe({
-      next: response => this.products = response.data, // what to do next
+      next: response => {
+        this.products = response.data;
+        this.shopParams.pageNumber = response.pageIndex;
+        this.shopParams.pageSize = response.pageSize;
+        this.totalCount = response.count
+
+      }, // what to do next
       error: error => console.log(error), // what to do if there is an error
       complete: () => {
         console.log('request completed');
@@ -68,4 +75,10 @@ export class ShopComponent implements OnInit{
     this.getProducts();
   }
 
+  onPageChanged(event: any) {
+    if (this.shopParams.pageNumber !== event) {
+      this.shopParams.pageNumber = event.page;
+      this.getProducts();
+    }
+  }
 }
