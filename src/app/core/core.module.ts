@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {NavBarComponent} from "./nav-bar/nav-bar.component";
-import {RouterLink} from "@angular/router";
+import {RouterLink, RouterLinkActive} from "@angular/router";
 
 
 
@@ -9,10 +9,11 @@ import {RouterLink} from "@angular/router";
   declarations: [
     NavBarComponent
   ],
-    imports: [
-        CommonModule,
-        RouterLink
-    ],
+  imports: [
+    CommonModule,
+    RouterLink,
+    RouterLinkActive
+  ],
   exports: [
     NavBarComponent
   ]
