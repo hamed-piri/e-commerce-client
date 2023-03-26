@@ -3,10 +3,10 @@
     <section class="col-3">
 
       <h5 class="text-warning me-3">Sort</h5>
-      <select class="form-select mb-4">
-        <option>Alphabetical</option>
-        <option>Price: Low to high</option>
-        <option>Price: high to low</option>
+      <select class="form-select mb-4" (change)="onSortSelected($event)">
+        <option *ngFor="let sort of sortOptions" [value]="sort.value">
+          {{sort.name}}
+        </option>
       </select>
 
       <h5 class="text-warning me-3">Brands</h5>
