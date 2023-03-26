@@ -13,6 +13,8 @@ export class ShopComponent implements OnInit{
   products: Product[] = []
   brands: IBrand[] = []
   types: IType[] = []
+  brandIdSelected?: number
+  typeIdSelected?: number
   constructor(private shopService: ShopService) {
   }
   ngOnInit(): void {
@@ -22,7 +24,7 @@ export class ShopComponent implements OnInit{
   }
 
   getProducts(){
-    this.shopService.getProducts().subscribe({
+    this.shopService.getProducts(this.brandIdSelected,this.typeIdSelected).subscribe({
       next: response => this.products = response.data, // what to do next
       error: error => console.log(error), // what to do if there is an error
       complete: () => {
@@ -34,24 +36,26 @@ export class ShopComponent implements OnInit{
 
   getBrands(){
     this.shopService.getBrands().subscribe({
-      next: response => this.brands = response, // what to do next
-      error: error => console.log(error), // what to do if there is an error
-      complete: () => {
-        console.log('request completed');
-        console.log('extra statement');
-      }
+      next: response => this.brands = [{id: 0, name: 'All'}, ...response],
+      error: error => console.log(error)
     })
   }
 
-  getTypes(){
+  getTypes() {
     this.shopService.getTypes().subscribe({
-      next: response => this.types = response, // what to do next
-      error: error => console.log(error), // what to do if there is an error
-      complete: () => {
-        console.log('request completed');
-        console.log('extra statement');
-      }
+      next: response => this.types = [{id: 0, name: 'All'}, ...response],
+      error: error => console.log(error)
     })
+  }
+
+  onBrandSelected(brandId: number){
+    this.brandIdSelected = brandId;
+    this.getProducts()
+  }
+
+  onTypeSelected(typeId: number){
+    this.typeIdSelected = typeId;
+    this.getProducts()
   }
 
 }
