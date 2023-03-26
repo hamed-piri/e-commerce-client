@@ -3,6 +3,7 @@ import {Product} from "../shared/models/product";
 import {ShopService} from "./shop.service";
 import {IBrand} from "../shared/models/brand";
 import {IType} from "../shared/models/productType";
+import {ShopParams} from "../shared/models/shopParams";
 
 @Component({
   selector: 'app-shop',
@@ -13,8 +14,7 @@ export class ShopComponent implements OnInit{
   products: Product[] = []
   brands: IBrand[] = []
   types: IType[] = []
-  brandIdSelected?: number
-  typeIdSelected?: number
+  shopParams = new ShopParams();
   constructor(private shopService: ShopService) {
   }
   ngOnInit(): void {
@@ -24,7 +24,7 @@ export class ShopComponent implements OnInit{
   }
 
   getProducts(){
-    this.shopService.getProducts(this.brandIdSelected,this.typeIdSelected).subscribe({
+    this.shopService.getProducts(this.shopParams).subscribe({
       next: response => this.products = response.data, // what to do next
       error: error => console.log(error), // what to do if there is an error
       complete: () => {
@@ -49,12 +49,12 @@ export class ShopComponent implements OnInit{
   }
 
   onBrandSelected(brandId: number){
-    this.brandIdSelected = brandId;
+    this.shopParams.brandId = brandId;
     this.getProducts()
   }
 
   onTypeSelected(typeId: number){
-    this.typeIdSelected = typeId;
+    this.shopParams.typeId = typeId;
     this.getProducts()
   }
 
