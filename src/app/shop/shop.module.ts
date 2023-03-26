@@ -8,6 +8,9 @@ import { ShopComponent } from './shop.component';
   declarations: [
     ShopComponent
   ],
+  exports: [
+    ShopComponent
+  ],
   imports: [
     CommonModule
   ]
