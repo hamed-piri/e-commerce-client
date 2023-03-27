@@ -15,7 +15,8 @@ import {RouterLink} from "@angular/router";
     ProductDetailsComponent
   ],
   exports: [
-    ShopComponent
+    ShopComponent,
+    ProductDetailsComponent
   ],
   imports: [
     CommonModule,
