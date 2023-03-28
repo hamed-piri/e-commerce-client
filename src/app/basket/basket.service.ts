@@ -22,6 +22,7 @@ export class BasketService {
       next: basket => {
         this.basketSource.next(basket);
         this.calculateTotals();
+        console.log(this.getCurrentBasketValue())
       }
     })
   }
