@@ -1,5 +1,6 @@
 import * as cuid from 'cuid';
-export interface IBasketItem {
+
+export interface BasketItem {
   id: number;
   productName: string;
   price: number;
@@ -9,15 +10,14 @@ export interface IBasketItem {
   type: string;
 }
 
-export interface IBasket {
+export interface Basket {
   id: string;
-  items: IBasketItem[];
+  items: BasketItem[];
 }
 
-export class Basket implements IBasket {
+export class Basket implements Basket {
   id = cuid();
-  items!: IBasketItem[];
-
+  items: BasketItem[] = [];
 }
 
 export interface BasketTotals {
