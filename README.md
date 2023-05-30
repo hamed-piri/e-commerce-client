@@ -1,5 +1,13 @@
 # Client
 
+var query = from ga in _context.RFD_tblGateAccess
+            join maxApplyDate in (
+                from ga1 in _context.RFD_tblGateAccess
+                group ga1 by new { ga1.PersonelID, ga1.ControllerID } into g
+                select new { g.Key.PersonelID, g.Key.ControllerID, Expr1 = g.Max(x => x.ApplyDate) }
+            ) on new { ga.PersonelID, ga.ControllerID, ga.ApplyDate } equals new { maxApplyDate.PersonelID, maxApplyDate.ControllerID, ApplyDate = maxApplyDate.Expr1 }
+            select ga;
+
 var result = dbContext.RFD_tblGateAccess
                 .Join(
                     dbContext.RFD_tblGateAccess
