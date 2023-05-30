@@ -1,5 +1,9 @@
 # Client
 
+
+      کوئری ارائه شده را می‌توانید با استفاده از LINQ و EF Core به صورت زیر پیاده‌سازی کنید:
+
+```
 var query = from ga in _context.RFD_tblGateAccess
             join maxApplyDate in (
                 from ga1 in _context.RFD_tblGateAccess
@@ -7,21 +11,33 @@ var query = from ga in _context.RFD_tblGateAccess
                 select new { g.Key.PersonelID, g.Key.ControllerID, Expr1 = g.Max(x => x.ApplyDate) }
             ) on new { ga.PersonelID, ga.ControllerID, ga.ApplyDate } equals new { maxApplyDate.PersonelID, maxApplyDate.ControllerID, ApplyDate = maxApplyDate.Expr1 }
             select ga;
+```
 
-var result = dbContext.RFD_tblGateAccess
-                .Join(
-                    dbContext.RFD_tblGateAccess
-                        .GroupBy(ga => new { ga.PersonelID, ga.ControllerID })
-                        .Select(g => new
-                        {
-                            g.Key.PersonelID,
-                            g.Key.ControllerID,
-                            Expr1 = g.Max(x => x.ApplyDate)
-                        }),
-                    ga => new { ga.PersonelID, ga.ControllerID, ga.ApplyDate },
-                    maxDate => new { maxDate.PersonelID, maxDate.ControllerID, ApplyDate = maxDate.Expr1 },
-                    (ga, maxDate) => ga
-                );
+در این کد، `RFD_tblGateAccess` نام جدول مورد نظر است که در `DbContext` با نام `_context` تعریف شده است. همچنین، برای انجام عملیات `JOIN`، از دو زیر‌کوئری استفاده شده است؛ یکی برای گروه‌بندی بر اساساس `PersonelID` و `ControllerID` و استخراج مقدار بیشترین `ApplyDate`، و دیگری برای انجام `JOIN` با جدول اصلی.
+
+برای اجرای این کوئری، می‌توانید به صورت زیر عمل کنید:
+
+```
+var query = _context.RFD_tblGateAccess
+    .Join(
+        _context.RFD_tblGateAccess
+            .GroupBy(x => new { x.PersonelID, x.ControllerID })
+            .Select(g => new 
+            { 
+                g.Key.PersonelID, 
+                g.Key.ControllerID, 
+                Expr1 = g.Max(x => x.ApplyDate) 
+            }),
+        ga => new { ga.PersonelID, ga.ControllerID, ga.ApplyDate },
+        maxApplyDate => new { maxApplyDate.PersonelID, maxApplyDate.ControllerID, ApplyDate = maxApplyDate.Expr1 },
+        (ga, maxApplyDate) => ga
+    )
+    .ToList();
+```
+
+در این کد، تابع `Join` برای انجام عملیات `JOIN` بین جدول اصلی و زیرکوئری استفاده شده است. دراولین پارامتر این تابع، جدول اصلی است که بر روی آن `JOIN` انجام می‌شود. دومین پارامتر، زیرکوئری مربوط به محاسبه مقدار بیشترین `ApplyDate` برای هر گروه `PersonelID` و `ControllerID` است. در سومین پارامتر، شرایط مورد نیاز برای `JOIN` در دو جدول تعیین می‌شود. در نهایت، در بخش چهارم، نتیجه `JOIN` با جدول اصلی به صورت `RFD_tblGateAccess` بازگردانده می‌شود.
+
+در این مثال، نتیجه کوئری به صورت یک لیست از `RFD_tblGateAccess` بازگردانده می‌شود. در صورت نیاز، می‌توانید از دیگر روش‌های بازگرداندن نتایجاد شیء جدید با است
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.2.4.
 
